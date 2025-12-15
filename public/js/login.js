@@ -24,7 +24,7 @@ async function manejarInicioSesion(event) {
 
     try {
         // 2. Llamada a la nueva ruta de API en server.js
-        const response = await fetch('http://localhost:3000/api/login', {
+        const response = await fetch('https://makeup-dpl7.onrender.com/api/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

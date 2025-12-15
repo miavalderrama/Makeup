@@ -1,11 +1,8 @@
 const express = require('express');
-const mysql = require('mysql');
 const bcrypt = require('bcryptjs'); 
 const cors = require('cors'); 
 const path = require('path'); 
-const { dbConfig } = require('./db_config'); 
 const fetch = require('node-fetch'); // Usamos fetch de node-fetch
-const translate = require('translate');
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -28,20 +25,25 @@ app.use(express.static(path.join(__dirname, '..', 'public')));
 // 3. Permite procesar JSON
 app.use(express.json());
 
+const { Pool } = require('pg'); 
 
-// ----------------------------------------------------
-// CONEXIÓN A MYSQL
-// ----------------------------------------------------
-const pool = mysql.createPool(dbConfig);
+// Usamos las variables de entorno para la configuración
+const pool = new Pool({
+    user: process.env.DB_USER,
+    host: process.env.DB_HOST,
+    database: process.env.DB_NAME,
+    password: process.env.DB_PASSWORD,
+    // El puerto estándar de Postgres, Render lo necesitará.
+    port: process.env.DB_PORT 
+});
 
-// Prueba de conexión (al iniciar el servidor)
-pool.getConnection((err, connection) => {
-    if (err) {
-        console.error('❌ Error al conectar a la base de datos:', err.code);
-        return;
-    }
-    console.log('✅ Conectado a la base de datos MySQL.');
-    connection.release();
+// Prueba de conexión
+pool.query('SELECT NOW()', (err, res) => {
+    if (err) {
+        console.error('❌ Error al conectar a la base de datos Postgres:', err.stack);
+        return;
+    }
+    console.log('✅ Conectado a la base de datos Postgres.');
 });
 
 // ====================================================
@@ -274,24 +276,24 @@ app.post('/api/registro', async (req, res) => {
         // 3. Query de inserción en la tabla 'usuarios'
         const query = `
 INSERT INTO usuarios (nombre, correo, contrasena, tipo_piel, subtono_piel, nivel_tono)
-VALUES (?, ?, ?, ?, ?, ?)
+VALUES ($1, $2, $3, $4, $5, $6)
 `;
         const values = [nombre, correo, passwordHash, tipoPiel, subtonoPiel, nivelTono];
 
         pool.query(query, values, (error, results) => {
             if (error) {
-                // Manejar error si el correo ya existe
-                if (error.code === 'ER_DUP_ENTRY') {
-                    return res.status(409).json({ error: 'El correo electrónico ya está registrado.' });
-                }
-                console.error('Error al insertar usuario en MySQL:', error);
-                return res.status(500).json({ error: 'Error interno del servidor al registrar.' });
-            }
+    // Código de error de Postgres para violación de restricción UNIQUE (correo)
+    if (error.code === '23505') { // Código de PostgreSQL para 'unique_violation'
+        return res.status(409).json({ error: 'El correo electrónico ya está registrado.' });
+    }
+    console.error('Error al insertar usuario en Postgres:', error);
+    return res.status(500).json({ error: 'Error interno del servidor al registrar.' });
+}
 
             // 4. Respuesta de éxito
             res.status(201).json({ 
                 message: 'Usuario registrado con éxito', 
-                userId: results.insertId 
+                userId: 'Registro exitoso'
             });
         });
 
@@ -310,20 +312,20 @@ app.post('/api/login', async (req, res) => {
     }
 
     // 1. Buscar al usuario por correo
-    const query = 'SELECT * FROM usuarios WHERE correo = ?';
+    const query = 'SELECT * FROM usuarios WHERE correo = $1';
 
     pool.query(query, [correo], async (error, results) => {
         if (error) {
-            console.error('Error al buscar usuario en MySQL:', error);
+            console.error('Error al buscar usuario en Postgres:', error);
             return res.status(500).json({ error: 'Error interno del servidor.' });
         }
 
         // 2. Verificar si el usuario existe
-        if (results.length === 0) {
+        if (results.rows.length === 0) {
             return res.status(401).json({ error: 'Correo o contraseña incorrectos.' });
         }
 
-        const user = results[0];
+        const user = results.rows[0];
         
         // 3. Comparar la contraseña ingresada con la hasheada en la BD
         const passwordMatch = await bcrypt.compare(password, user.contrasena);
@@ -404,7 +406,7 @@ app.get('/api/productos/atributos', (req, res) => {
         pool.query(tipoPielQuery, (error, results) => {
             if (error) reject(error);
             // Mapeamos los resultados a un array simple de strings
-            resolve(results.map(row => row.tipo_piel));
+            resolve(results.rows.map(row => row.tipo_piel));
         });
     });
 
@@ -424,7 +426,7 @@ app.get('/api/productos/atributos', (req, res) => {
             });
         })
         .catch(error => {
-            console.error('Error al obtener atributos únicos de MySQL:', error);
+            console.error('Error al obtener atributos únicos de Postgres:', error);
             res.status(500).json({ error: 'Error al obtener atributos de filtro.' });
         });
 });

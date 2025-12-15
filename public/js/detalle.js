@@ -2,7 +2,7 @@
 
 
 
-const API_PRODUCTO_BASE = 'http://localhost:3000/api/productos';
+const API_PRODUCTO_BASE = 'https://makeup-dpl7.onrender.com/api/productos';
 
 
 

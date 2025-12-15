@@ -1,7 +1,7 @@
 // recomendaciones.js (VERSIÓN MEJORADA)
 
 // URL base de tu servidor Express
-const API_BASE = 'http://localhost:3000/api';
+const API_BASE = 'https://makeup-dpl7.onrender.com/api';
 
 // =================================================================
 // ESTRUCTURA GLOBAL PARA CONTEO REACTIVO DE FALLOS (CRUCIAL)
