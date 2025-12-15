@@ -67,7 +67,8 @@ async function manejarInicioSesion(event) {
         resultadoDiv.style.backgroundColor = '#fff3e0';
         resultadoDiv.innerHTML = `
             <p><strong>Error de Conexión:</strong></p>
-            <p>Asegúrate de que el servidor esté corriendo en <code>http://localhost:3000</code>.</p>
+            <p>El servicio de Render no está disponible.</p>
+            <p>URL de la API: <code>https://makeup-dpl7.onrender.com</code></p>
         `;
         console.error('Error de fetch:', error);
     }
