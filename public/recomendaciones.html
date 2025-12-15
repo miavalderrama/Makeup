@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recomendaciones de Maquillaje | Glamour Feed</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'rose': {
+                            50: '#fff1f2',
+                            100: '#ffe4e6',
+                            200: '#fecdd3',
+                            300: '#fda4af',
+                            400: '#fb7185',
+                            500: '#f43f5e', // Nuestro color principal
+                            600: '#e11d48',
+                            700: '#be123c',
+                            800: '#9f1239',
+                            900: '#881337',
+                            950: '#43141e',
+                        },
+                    }
+                }
+            }
+        }
+    </script>
+    
+    </head>
+<body class="bg-gray-50 min-h-screen p-4 sm:p-8">
+    <div class="max-w-7xl mx-auto">
+        
+        <header class="mb-10 text-center">
+            <h1 class="text-5xl font-extrabold text-rose-600 mb-2 tracking-tight">
+                💄 Glamour Feed: Tu Sistema de Recomendación
+            </h1>
+            <p class="text-lg text-gray-500">Encuentra los productos perfectos para realzar tu belleza.</p>
+        </header>
+
+        <div id="filtroInteligente" class="bg-white p-6 sm:p-8 rounded-xl shadow-2xl border-t-8 border-rose-400 mb-12">
+    <h2 class="text-3xl font-bold text-gray-800 mb-4 flex items-center">
+        ✨ Filtro Inteligente: Recomendación Personalizada
+    </h2>
+    <p class="text-gray-600 mb-6">Aplica nuestra lógica experta (simulación de IA) para filtrar productos según tu tipo y tono de piel.</p>
+    
+    <div id="contenedorFiltro" class="flex flex-col sm:flex-row items-stretch sm:items-end gap-4">
+        <p class="text-gray-500 italic">Cargando opciones de filtro de usuarios...</p>
+    </div>
+
+    <div id="productosFiltrados" class="bg-rose-50 p-6 rounded-lg border border-rose-200 mt-8">
+        <h3 class="text-xl font-bold text-rose-700 mb-2">Resultados del Filtro Inteligente</h3>
+        <p id="mensajeFiltro" class="text-gray-600">Selecciona tus datos y presiona el botón para ver las recomendaciones.</p>
+    </div>
+</div>
+
+        <h2 class="text-4xl font-extrabold text-gray-800 mb-6 border-b-4 border-rose-300 pb-3">
+            🛒 Catálogo General (Agrupado por Marcas)
+        </h2>
+        <div id="catalogoGeneral">
+            <p class="text-lg text-gray-500 p-4 text-center">Cargando catálogo de productos...</p>
+        </div>
+        
+    </div>
+
+    <script src="js/recomendaciones.js"></script>
+</body>
+</html>

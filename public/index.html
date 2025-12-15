@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro y Perfil de Piel | Maquillaje</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'rose': {
+                            50: '#fff1f2',
+                            100: '#ffe4e6',
+                            200: '#fecdd3',
+                            300: '#fda4af',
+                            400: '#fb7185',
+                            500: '#f43f5e', // Nuestro color principal
+                            600: '#e11d48',
+                            700: '#be123c',
+                            800: '#9f1239',
+                            900: '#881337',
+                            950: '#43141e',
+                        },
+                    }
+                }
+            }
+        }
+    </script>
+    
+</head>
+<body class="bg-rose-50 min-h-screen flex items-center justify-center p-4">
+
+    <div class="w-full max-w-lg bg-white p-8 sm:p-10 rounded-2xl shadow-2xl">
+        
+        <header class="mb-8 text-center">
+            <h1 class="text-4xl font-extrabold text-rose-600 mb-2">
+                ✨ Regístrate y Crea tu Perfil de Piel
+            </h1>
+            <p class="text-gray-500">Recibirás las recomendaciones más precisas.</p>
+        </header>
+
+        <form id="encuestaPielForm">
+            
+            <fieldset class="border border-gray-200 p-6 rounded-xl mb-8">
+                <legend class="text-lg font-bold text-rose-500 px-2">
+                    Datos de la Cuenta
+                </legend>
+                
+                <div class="mb-5">
+                    <label for="nombre" class="block mb-2 font-semibold text-gray-700">Nombre Completo</label>
+                    <input type="text" id="nombre" required 
+                           class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-400 transition duration-150">
+                </div>
+                
+                <div class="mb-5">
+                    <label for="correo" class="block mb-2 font-semibold text-gray-700">Correo Electrónico</label>
+                    <input type="email" id="correo" required 
+                           class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-400 transition duration-150">
+                </div>
+                
+                <div class="mb-5">
+                    <label for="password" class="block mb-2 font-semibold text-gray-700">Contraseña</label>
+                    <input type="password" id="password" required 
+                           class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-400 transition duration-150">
+                </div>
+            </fieldset>
+
+            <h3 class="text-2xl font-bold text-gray-800 mb-5 border-b pb-2">
+                Perfil de Maquillaje
+            </h3>
+
+            <div class="mb-5">
+                <label for="tipoPiel" class="block mb-2 font-semibold text-gray-700">1. ¿Cuál es tu tipo de piel?</label>
+                <select id="tipoPiel" required 
+                        class="w-full p-3 border border-gray-300 rounded-lg appearance-none bg-white focus:ring-2 focus:ring-rose-400 transition duration-150">
+                    <option value="">Selecciona una opción</option>
+                    <option value="Seca">Seca</option>
+                    <option value="Grasa">Grasa</option>
+                    <option value="Mixta">Mixta</option>
+                    <option value="Sensible">Sensible</option>
+                </select>
+            </div>
+
+            <div class="mb-5">
+                <label for="subtonoPiel" class="block mb-2 font-semibold text-gray-700">2. ¿Cuál es el subtono de tu piel?</label>
+                <select id="subtonoPiel" required 
+                        class="w-full p-3 border border-gray-300 rounded-lg appearance-none bg-white focus:ring-2 focus:ring-rose-400 transition duration-150">
+                    <option value="">Selecciona una opción</option>
+                    <option value="Frío">Frío (Rosado, Azulado)</option>
+                    <option value="Cálido">Cálido (Amarillo, Dorado)</option>
+                    <option value="Neutro">Neutro (Una mezcla de ambos)</option>
+                </select>
+            </div>
+            
+
+[Image of skin undertones guide]
+
+
+            <div class="mb-6">
+                <label for="nivelTono" class="block mb-2 font-semibold text-gray-700">3. ¿Cuál es tu nivel de tono de piel?</label>
+                <select id="nivelTono" required 
+                        class="w-full p-3 border border-gray-300 rounded-lg appearance-none bg-white focus:ring-2 focus:ring-rose-400 transition duration-150">
+                    <option value="">Selecciona una opción</option>
+                    <option value="Claro">Claro</option>
+                    <option value="Medio">Medio</option>
+                    <option value="Oscuro">Oscuro</option>
+                </select>
+            </div>
+
+            <button type="submit" 
+                    class="w-full py-3 bg-rose-500 hover:bg-rose-600 text-white font-bold rounded-lg shadow-lg transition duration-200 transform hover:scale-[1.01] active:scale-[0.99]">
+                Registrarme y Guardar Perfil
+            </button>
+            
+            <p class="text-center mt-4 text-gray-600">
+                ¿Ya tienes una cuenta? 
+                <a href="login.html" class="text-rose-600 font-bold hover:text-rose-800 transition duration-150">Iniciar Sesión</a>
+            </p>
+
+        </form>
+        
+        <div id="resultadoPerfil" class="mt-8 p-4 border-2 border-green-400 bg-green-50 text-green-700 rounded-lg font-medium hidden">
+            </div>
+        
+    </div>
+
+    <script src="js/app.js" type="module"></script> 
+
+</body>
+</html>

@@ -1,0 +1,11 @@
+# Ignorar dependencias de Node
+/node_modules
+
+# Ignorar archivos específicos de sistema/logs
+npm-debug.log
+.DS_Store
+
+# Ignorar archivos de configuración local sensibles
+# **IMPORTANTE:** Si db_config.js tiene tus claves, NO LO SUBAS.
+# En ese caso, deberías ignorarlo y crear las claves en Render (Ver Fase 2)
+# Ejemplo: /server/db_config.js

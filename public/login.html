@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión | Maquillaje</title>
+    <link rel="stylesheet" href="css/styles.css"> <style>
+        /* Estilos base, copia los de index.html si es necesario */
+        body { font-family: sans-serif; padding: 20px; background-color: #f7f7f7; }
+        .container { max-width: 400px; margin: 0 auto; background-color: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+        h1 { text-align: center; color: #e91e63; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; color: #333; }
+        input[type="email"], input[type="password"], button { width: 100%; padding: 10px; border-radius: 4px; border: 1px solid #ccc; font-size: 16px; box-sizing: border-box; }
+        button { background-color: #e91e63; color: white; border: none; cursor: pointer; margin-top: 15px; transition: background-color 0.3s; }
+        button:hover { background-color: #c2185b; }
+        .resultado { margin-top: 30px; padding: 15px; border: 2px solid #ff9800; background-color: #fff3e0; border-radius: 4px; display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>👋 Iniciar Sesión</h1>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="correoLogin">Correo Electrónico</label>
+                <input type="email" id="correoLogin" required>
+            </div>
+            <div class="form-group">
+                <label for="passwordLogin">Contraseña</label>
+                <input type="password" id="passwordLogin" required>
+            </div>
+            
+            <button type="submit">Entrar</button>
+        </form>
+
+        <div id="resultadoLogin" class="resultado">
+        </div>
+
+        <p style="text-align: center; margin-top: 20px;">
+            ¿No tienes cuenta? <a href="index.html" style="color: #e91e63; font-weight: bold;">Regístrate aquí</a>
+        </p>
+    </div>
+
+    <script src="js/login.js" type="module"></script> 
+
+</body>
+</html>
