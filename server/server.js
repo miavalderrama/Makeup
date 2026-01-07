@@ -11,7 +11,7 @@ function shuffleArray(array) {
     return array;
 }
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 // ----------------------------------------------------
 // MIDDLEWARE
@@ -468,5 +468,5 @@ app.get('/api/productos/:id', async (req, res) => {
 // ----------------------------------------------------
 
 app.listen(port, () => {
-    console.log(`🚀 Servidor Express escuchando en http://localhost:${port}`);
+    console.log(`🚀 Servidor subido con éxito. Puerto: ${port}`);
 });
