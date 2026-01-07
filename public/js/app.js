@@ -94,8 +94,8 @@ const response = await fetch('https://makeup-dpl7.onrender.com/api/registro', {
         }
     };
 
-    sessionStorage.setItem('userProfile', JSON.stringify(perfilParaFiltro));
-
+    // 2. ✨ ESTA ES LA LÍNEA QUE FALTA: Guardar en la memoria del navegador
+    localStorage.setItem('usuarioLogueado', JSON.stringify(datosUsuario));
 
     actualizarResultado('success', successContent);
     
