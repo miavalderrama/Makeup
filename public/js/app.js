@@ -76,29 +76,36 @@ const response = await fetch('https://makeup-dpl7.onrender.com/api/registro', {
 
         // 4. Manejar la respuesta del servidor
         if (response.ok) {
-            // Éxito (HTTP 201 Created)
+            // 1. Definir el contenido visual de éxito
             const successContent = `
                 <p class="font-bold">✅ ¡Registro exitoso!</p>
                 <p>Bienvenido/a: <span class="font-semibold">${datosRegistro.nombre}</span></p>
                 <p>Perfil Guardado: ${datosRegistro.tipoPiel}, ${datosRegistro.subtonoPiel}, ${datosRegistro.nivelTono}</p>
                 <p class="mt-2">🎉 Redireccionando a las recomendaciones en 3 segundos...</p>
             `;
-            const datosUsuario = {
-        nombre: nombre, // la variable que viene del formulario
-        perfil: {
-            tipoPiel: tipoPiel,
-            nivelTono: nivelTono,
-            subtonoPiel: subtonoPiel
-        }
-        };
+
+            // 2. CREAR EL PERFIL PARA EL FILTRO INTELIGENTE
+            // Usamos el formato exacto que espera recomendaciones.js (línea 136 y 145)
+            const perfilParaFiltro = {
+                tipoPiel: datosRegistro.tipoPiel,
+                nivelTono: datosRegistro.nivelTono,
+                subtonoPiel: datosRegistro.subtonoPiel
+            };
+
+            // 3. GUARDAR EN LA MEMORIA CORRECTA (sessionStorage)
+            // Guardamos con la clave 'userProfile' para que el filtro lo reconozca al cargar
+            sessionStorage.setItem('userProfile', JSON.stringify(perfilParaFiltro));
+
+            // 4. (Opcional) Guardar datos adicionales en localStorage
+            localStorage.setItem('nombreUsuario', datosRegistro.nombre);
+
+            // 5. Actualizar la interfaz y redirigir
             actualizarResultado('success', successContent);
             
-            // Redirigir al usuario después de 3 segundos
             setTimeout(() => {
                 window.location.href = "recomendaciones.html"; 
             }, 3000);
-
-        } else {
+        }else {
             // Error de la API (ej: correo duplicado, datos faltantes)
             const errorContent = `
                 <p class="font-bold">❌ Error al registrar:</p>
