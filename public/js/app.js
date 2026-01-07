@@ -96,8 +96,6 @@ const response = await fetch('https://makeup-dpl7.onrender.com/api/registro', {
 
     sessionStorage.setItem('userProfile', JSON.stringify(perfilParaFiltro));
 
-    // 3. (Opcional) También guardamos el nombre para el saludo si lo usas
-    localStorage.setItem('nombreUsuario', datosRegistro.nombre);
 
     actualizarResultado('success', successContent);
     
