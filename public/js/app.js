@@ -63,13 +63,14 @@ async function manejarEnvioRegistro(event) {
 
     try {
         // 3. Enviar los datos al servidor Express
-        const response = await fetch(API_REGISTRO_URL, {
-            method: 'POST', 
-            headers: {
-                'Content-Type': 'application/json' 
-            },
-            body: JSON.stringify(datosRegistro) 
-        });
+        // CÁMBIALO A ESTO:
+const response = await fetch('https://makeup-dpl7.onrender.com/api/registro', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(datosRegistro)
+});
 
         const data = await response.json(); 
 
