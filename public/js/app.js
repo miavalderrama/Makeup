@@ -76,21 +76,34 @@ const response = await fetch('https://makeup-dpl7.onrender.com/api/registro', {
 
         // 4. Manejar la respuesta del servidor
         if (response.ok) {
-            // Éxito (HTTP 201 Created)
-            const successContent = `
-                <p class="font-bold">✅ ¡Registro exitoso!</p>
-                <p>Bienvenido/a: <span class="font-semibold">${datosRegistro.nombre}</span></p>
-                <p>Perfil Guardado: ${datosRegistro.tipoPiel}, ${datosRegistro.subtonoPiel}, ${datosRegistro.nivelTono}</p>
-                <p class="mt-2">🎉 Redireccionando a las recomendaciones en 3 segundos...</p>
-            `;
-            actualizarResultado('success', successContent);
-            
-            // Redirigir al usuario después de 3 segundos
-            setTimeout(() => {
-                window.location.href = "recomendaciones.html"; 
-            }, 3000);
+    // Éxito (HTTP 201 Created)
+    const successContent = `
+        <p class="font-bold">✅ ¡Registro exitoso!</p>
+        <p>Bienvenido/a: <span class="font-semibold">${datosRegistro.nombre}</span></p>
+        <p>Perfil Guardado: ${datosRegistro.tipoPiel}, ${datosRegistro.subtonoPiel}, ${datosRegistro.nivelTono}</p>
+        <p class="mt-2">🎉 Redireccionando a las recomendaciones en 3 segundos...</p>
+    `;
 
-        } else {
+    // 1. Creamos el objeto (como ya lo tenías)
+    const datosUsuario = {
+        nombre: datosRegistro.nombre, // Asegúrate de que se llame así en tu código
+        perfil: {
+            tipoPiel: datosRegistro.tipoPiel,
+            nivelTono: datosRegistro.nivelTono,
+            subtonoPiel: datosRegistro.subtonoPiel
+        }
+    };
+
+    // 2. ✨ ESTA ES LA LÍNEA QUE FALTA: Guardar en la memoria del navegador
+    localStorage.setItem('usuarioLogueado', JSON.stringify(datosUsuario));
+
+    actualizarResultado('success', successContent);
+    
+    // Redirigir al usuario después de 3 segundos
+    setTimeout(() => {
+        window.location.href = "recomendaciones.html"; 
+    }, 3000);
+}else {
             // Error de la API (ej: correo duplicado, datos faltantes)
             const errorContent = `
                 <p class="font-bold">❌ Error al registrar:</p>
