@@ -2,7 +2,7 @@ const express = require('express');
 const bcrypt = require('bcryptjs'); 
 const cors = require('cors'); 
 const path = require('path'); 
-const fetch = require('node-fetch'); // Usamos fetch de node-fetch
+const fetch = require('node-fetch');
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -16,24 +16,15 @@ const port = process.env.PORT || 3000;
 // ----------------------------------------------------
 // MIDDLEWARE
 // ----------------------------------------------------
-// 1. Permite peticiones de otros orígenes (CORS)
 app.use(cors()); 
-
-// 2. Sirve los archivos estáticos (HTML, CSS, JS) desde la carpeta 'public'
 app.use(express.static(path.join(__dirname, '..', 'public')));
-
-// 3. Permite procesar JSON
 app.use(express.json());
-
 const { Pool } = require('pg'); 
-
-// Usamos las variables de entorno para la configuración
 const pool = new Pool({
     user: process.env.DB_USER,
     host: process.env.DB_HOST,
     database: process.env.DB_NAME,
     password: process.env.DB_PASSWORD,
-    // El puerto estándar de Postgres, Render lo necesitará.
     port: process.env.DB_PORT 
 });
 
@@ -46,9 +37,9 @@ pool.query('SELECT NOW()', (err, res) => {
     console.log('✅ Conectado a la base de datos Postgres.');
 });
 
-// ====================================================
-// FUNCIÓN DE LÓGICA EXPERTA (SIMULACIÓN DE IA)
-// ====================================================
+// ===========================
+// FUNCIÓN DE LÓGICA EXPERTA 
+// ===========================
 /**
  * Aplica la lógica de recomendación basada en tipo de piel y tono.
  * @param {object} producto - El objeto del producto de maquillaje.
@@ -57,7 +48,6 @@ pool.query('SELECT NOW()', (err, res) => {
  * @returns {boolean} - True si el producto coincide con los criterios.
  */
 function aplicarLogicaExperta(producto, tipoPiel, nivelTono) {
-    // 1. Lógica de Tipo de Piel
     const desc = (producto.description || '').toLowerCase() + ' ' + 
                  (producto.product_type || '').toLowerCase() + ' ' +
                  (producto.tag_list ? producto.tag_list.join(' ') : '');
@@ -65,46 +55,30 @@ function aplicarLogicaExperta(producto, tipoPiel, nivelTono) {
     let matchPiel = false;
 
     if (tipoPiel === 'Grasa') {
-        // Busca productos que sean mate, sin aceite, de larga duración, o que controlen brillo.
         matchPiel = desc.includes('matte') || desc.includes('oil free') || desc.includes('long lasting') || desc.includes('pore minimizing') || desc.includes('oil control');
     } else if (tipoPiel === 'Seca') {
-        // Busca productos hidratantes, luminosos, dewy, o con aceite.
         matchPiel = desc.includes('hydrating') || desc.includes('dewy') || desc.includes('illuminating') || desc.includes('moisture') || desc.includes('oil');
     } else if (tipoPiel === 'Mixta' || tipoPiel === 'Normal') {
-        // Son más flexibles, buscan productos balanceados o simplemente con buena cobertura.
         matchPiel = desc.includes('satin') || desc.includes('natural') || desc.includes('coverage') || desc.includes('cream');
     } else if (tipoPiel === 'Sensible') {
-        // Busca productos que sean libres de fragancia, naturales, o para pieles sensibles (si la API lo permite)
          matchPiel = desc.includes('sensitive') || desc.includes('natural') || desc.includes('fragrance free') || desc.includes('mineral');
     }
-    
-    // Si el producto no es claramente de piel, o es un accesorio, permitimos el paso a la lógica de tono.
     if (producto.product_type === 'eyeliner' || producto.product_type === 'mascara' || producto.product_type === 'nail_polish') {
         matchPiel = true; 
     }
-
-    // 2. Lógica de Nivel de Tono (Simulación de color match)
-    // Esto se aplica principalmente a bases, correctores, rubores.
     let matchTono = false;
     const nombre = (producto.name || '').toLowerCase();
 
     if (nivelTono === 'Claro') {
-        // Buscamos palabras clave de tonos pálidos o claros.
         matchTono = nombre.includes('light') || nombre.includes('fair') || nombre.includes('ivory') || nombre.includes('porcelain');
     } else if (nivelTono === 'Medio') {
-        // Buscamos palabras clave de tonos beige o medios.
         matchTono = nombre.includes('medium') || nombre.includes('beige') || nombre.includes('sand') || nombre.includes('tan');
     } else if (nivelTono === 'Oscuro') {
-        // Buscamos palabras clave de tonos oscuros o profundos.
         matchTono = nombre.includes('dark') || nombre.includes('deep') || nombre.includes('mocha') || nombre.includes('espresso');
     }
-    
-    // Si el producto no es sensible al tono (ej. rímel, delineador negro), siempre hacemos match.
     if (producto.product_type === 'eyeliner' || producto.product_type === 'mascara' || producto.product_type === 'nail_polish') {
         matchTono = true; 
     }
-
-    // El producto DEBE cumplir ambos criterios
     return matchPiel && matchTono;
 }
 /**
@@ -112,10 +86,9 @@ function aplicarLogicaExperta(producto, tipoPiel, nivelTono) {
  * @param {object} producto - El objeto del producto de maquillaje.
  * @returns {string} - Un texto con la recomendación de look.
  */
-// server.js (NUEVA VERSIÓN ASÍNCRONA usando SIMULACIÓN DE IA)
+
 
 /**
- * SIMULA la llamada a una IA Generativa (como Gemini) para crear
  * un tutorial de maquillaje altamente detallado y personalizado.
  * * @param {object} producto - El objeto del producto de maquillaje.
  * @returns {object} - Un objeto con el look_recomendado estructurado y generado dinámicamente.
@@ -124,20 +97,11 @@ async function sugerirLooks(producto) {
     const tipo = (producto.product_type || '').toLowerCase().replace(/_/g, ' ');
     const marca = producto.brand || 'Marca Desconocida';
     const nombre = producto.name || 'Producto de Maquillaje';
-    
-    // --- Lógica de Prompt (Lo que le pediríamos a la IA) ---
-    // Usamos esta lógica para simular una respuesta contextual
     let prompt = `Genera un tutorial de maquillaje detallado y creativo para un look que tenga como producto central el: "${nombre}" de la marca "${marca}" (Tipo: ${tipo}).`;
-    
-    // Simulación de la respuesta dinámica de la IA
-    // En un entorno real, aquí iría la llamada a la API de Gemini.
-    // La IA generaría un JSON como el siguiente:
     const lookGenerado = {};
     
     try {
-        await new Promise(resolve => setTimeout(resolve, 50)); // Simula latencia de la API
-        
-        // Simulación de respuesta basada en el tipo de producto (más detallada)
+        await new Promise(resolve => setTimeout(resolve, 50)); 
         if (tipo.includes('lipstick') || tipo.includes('lip liner')) {
             lookGenerado.titulo = `Look 'Bold Lip' con el labial ${nombre}`;
             lookGenerado.descripcion = `Un look moderno que equilibra un labio audaz con un rostro limpio y ojos sutiles. La clave es la precisión.`;
@@ -171,7 +135,6 @@ async function sugerirLooks(producto) {
                 `Completa con un brillo de labios rosa o nude.`
             ];
         } else {
-            // Respuesta genérica y dinámica para otros tipos de producto
             lookGenerado.titulo = `Guía Rápida para ${nombre}`;
             lookGenerado.descripcion = `Hemos creado una micro-guía para ayudarte a integrar este ${tipo} en tu look diario.`;
             lookGenerado.pasos = [
@@ -184,7 +147,6 @@ async function sugerirLooks(producto) {
 
     } catch (error) {
         console.error("Error simulado al generar look con IA:", error);
-        // Fallback en caso de fallo real
         lookGenerado.titulo = "Sugerencia Simple";
         lookGenerado.descripcion = "No pudimos generar un tutorial avanzado, pero este producto es perfecto para el uso diario.";
         lookGenerado.pasos = ["Aplica y difumina.", "¡Disfruta tu nuevo look!"];
@@ -195,29 +157,19 @@ async function sugerirLooks(producto) {
 const SIMULACION_TRADUCCION = {
     "with maybelline colour sensational vivids lipcolour bright goes gorgeous never garishget brighter color from maybelline's exclusive vivid pigmentsplus get creamier feel from nourishing honey nectarfeatures be bright and gorgeousexclusive vivid colors are brighterhoney nectar formula nourishes lipsfor best resultsapply lipcolor starting in the center of your upper lip work from the center to the outer edges of your lip following the contours of your mouth then glide across the entire bottom lipshade range": "¡Con el lápiz labial Maybelline Colour Sensational Vivids, el brillo se vuelve magnífico, nunca chillón! Obtén un color más brillante gracias a los pigmentos vivos exclusivos de Maybelline. Además, obtén una sensación más cremosa gracias al nutritivo néctar de miel. Características: Luce brillante y hermosa. Los colores vivos exclusivos son más brillantes. La fórmula de néctar de miel nutre los labios. Para mejores resultados: Aplica el labial comenzando en el centro de tu labio superior. Trabaja desde el centro hacia los bordes exteriores, siguiendo el contorno de tu boca. Luego desliza a través de todo el labio inferior. Rango de tonos:",
     "not available": "Descripción no disponible.",
-    // Aquí puedes añadir más frases si ves que la API te devuelve otros textos comunes
 };
-
-// Función de traducción simulada mejorada
 async function traducirDescripcion(texto) {
     if (!texto) return "Descripción no disponible.";
-
-    // Normalizamos el texto (quitamos saltos de línea, puntos, espacios y lo ponemos en minúsculas)
-    // Usamos una limpieza agresiva para que coincida con la clave larga del mapeo.
     const normalizedText = texto
         .toLowerCase()
-        .replace(/[\r\n\t]/g, '') // Quitar saltos de línea y tabs
-        .replace(/[.,!?':;{}()]/g, '') // Quitar signos de puntuación
-        .replace(/\s+/g, ' ') // Quitar espacios extra
+        .replace(/[\r\n\t]/g, '') 
+        .replace(/[.,!?':;{}()]/g, '') 
+        .replace(/\s+/g, ' ') 
         .trim();
-
-    // Buscamos la traducción en la tabla de simulación
     if (SIMULACION_TRADUCCION[normalizedText]) {
         console.log(`[Traductor Simulado] Traducción mapeada encontrada.`);
         return SIMULACION_TRADUCCION[normalizedText];
     }
-    
-    // Si no encontramos un mapeo exacto, devolvemos un texto procesado para que parezca traducido.
     console.log(`[Traductor Simulado] Usando original + indicador de proceso.`);
     return `(Simulado) ${texto}`;
 }
@@ -231,14 +183,9 @@ app.get('/api/productos/catalogo', async (req, res) => {
             throw new Error(`Error fetching data: ${response.statusText}`);
         }
         let productos = await response.json(); 
-        
-        // 1. FILTRO (Mantenemos el filtro simple para evitar productos sin NADA)
         productos = productos.filter(p => p.name); 
-
-        // 2. BARAJEAR la lista completa
         const productosBarajados = shuffleArray(productos); 
-        
-        // 3. Devolver los primeros 50 de la lista barajada
+
         res.status(200).json(productosBarajados.slice(0, 50)); 
 
     } catch (error) {
@@ -251,29 +198,18 @@ app.get('/api/productos/catalogo', async (req, res) => {
 // ----------------------------------------------------
 // RUTAS DE LA APLICACIÓN (API ENDPOINTS)
 // ----------------------------------------------------
-
-// RUTA GET: PRUEBA BÁSICA (SIN CAMBIOS)
 app.get('/api/test', (req, res) => {
-    // Solo enviamos una respuesta simple para confirmar que Express está OK.
     res.json({ message: 'El servidor está corriendo perfectamente. Ruta de prueba OK.' });
 });
-
-// RUTA POST: REGISTRO (SIN CAMBIOS)
 app.post('/api/registro', async (req, res) => {
-    // Desestructurar los datos enviados desde el formulario (frontend)
     const { nombre, correo, password, tipoPiel, subtonoPiel, nivelTono } = req.body;
-
-    // 1. Validar que no falten datos esenciales
     if (!nombre || !correo || !password || !tipoPiel || !subtonoPiel || !nivelTono) {
         return res.status(400).json({ error: 'Faltan campos obligatorios del registro.' });
     }
 
     try {
-        // 2. Hashear la contraseña por seguridad
         const salt = await bcrypt.genSalt(10);
         const passwordHash = await bcrypt.hash(password, salt);
-
-        // 3. Query de inserción en la tabla 'usuarios'
         const query = `
 INSERT INTO usuarios (nombre, correo, contrasena, tipo_piel, subtono_piel, nivel_tono)
 VALUES ($1, $2, $3, $4, $5, $6)
@@ -282,15 +218,12 @@ VALUES ($1, $2, $3, $4, $5, $6)
 
         pool.query(query, values, (error, results) => {
             if (error) {
-    // Código de error de Postgres para violación de restricción UNIQUE (correo)
-    if (error.code === '23505') { // Código de PostgreSQL para 'unique_violation'
+    if (error.code === '23505') { 
         return res.status(409).json({ error: 'El correo electrónico ya está registrado.' });
     }
     console.error('Error al insertar usuario en Postgres:', error);
     return res.status(500).json({ error: 'Error interno del servidor al registrar.' });
 }
-
-            // 4. Respuesta de éxito
             res.status(201).json({ 
                 message: 'Usuario registrado con éxito', 
                 userId: 'Registro exitoso'
@@ -303,15 +236,12 @@ VALUES ($1, $2, $3, $4, $5, $6)
     }
 });
 
-// RUTA POST: INICIO DE SESIÓN (SIN CAMBIOS)
 app.post('/api/login', async (req, res) => {
     const { correo, password } = req.body;
 
     if (!correo || !password) {
         return res.status(400).json({ error: 'Faltan correo o contraseña.' });
     }
-
-    // 1. Buscar al usuario por correo
     const query = 'SELECT * FROM usuarios WHERE correo = $1';
 
     pool.query(query, [correo], async (error, results) => {
@@ -319,22 +249,17 @@ app.post('/api/login', async (req, res) => {
             console.error('Error al buscar usuario en Postgres:', error);
             return res.status(500).json({ error: 'Error interno del servidor.' });
         }
-
-        // 2. Verificar si el usuario existe
         if (results.rows.length === 0) {
             return res.status(401).json({ error: 'Correo o contraseña incorrectos.' });
         }
 
         const user = results.rows[0];
-        
-        // 3. Comparar la contraseña ingresada con la hasheada en la BD
         const passwordMatch = await bcrypt.compare(password, user.contrasena);
 
         if (!passwordMatch) {
             return res.status(401).json({ error: 'Correo o contraseña incorrectos.' });
         }
 
-         // 4. Éxito: Devolver datos del usuario (sin la contraseña)
          const userProfile = {
             tipoPiel: user.tipo_piel,
              subtonoPiel: user.subtono_piel,
@@ -344,13 +269,10 @@ app.post('/api/login', async (req, res) => {
          res.status(200).json({
              message: 'Login exitoso',
              nombre: user.nombre,
-         perfil: userProfile // Enviamos el perfil para usarlo en el frontend
+         perfil: userProfile 
     });
      });
 });
-
-
-// RUTA GET: FILTRADO INTELIGENTE (¡AQUÍ ESTÁ LA CORRECCIÓN!)
 app.get('/api/productos/filtrado', async (req, res) => {
     const { tipoPiel, nivelTono } = req.query; 
      const externalApiUrl = 'http://makeup-api.herokuapp.com/api/v1/products.json';
@@ -365,9 +287,7 @@ app.get('/api/productos/filtrado', async (req, res) => {
             throw new Error(`Error fetching data: ${response.statusText}`);
         }
         const productos = await response.json();
-         // 1. Aplicar el filtro de Lógica Experta (Simulación de IA)
         let productosFiltrados = productos.filter(p => {
-             // **USANDO LA FUNCIÓN DE LÓGICA EXPERTA**
              return aplicarLogicaExperta(p, tipoPiel, nivelTono);
          });
 
@@ -377,15 +297,12 @@ app.get('/api/productos/filtrado', async (req, res) => {
              .filter(p => p.image_link && p.image_link.startsWith('http'))
              .map(p => ({
                  ...p,
-             image_link: p.image_link.replace('http://', 'https://') // Aseguramos HTTPS
+             image_link: p.image_link.replace('http://', 'https://') 
 }));
-
-         // 3. BARAJEAR la lista de productos que cumplen ambos criterios (filtro + foto)
         const productosBarajados = shuffleArray(productosConFotoYCorregidos); 
 
          res.status(200).json({
          perfil: { tipoPiel, nivelTono },
-         // 4. Devolver los 15 primeros de la lista barajada (y filtrada por imagen)
          productos: productosBarajados.slice(0, 15)
 });
 
@@ -395,17 +312,11 @@ app.get('/api/productos/filtrado', async (req, res) => {
  }
 });
 app.get('/api/productos/atributos', (req, res) => {
-    // 1. Query para obtener valores únicos de Tipo de Piel
     const tipoPielQuery = 'SELECT DISTINCT tipo_piel FROM usuarios WHERE tipo_piel IS NOT NULL';
-    
-    // 2. Query para obtener valores únicos de Nivel de Tono
     const nivelTonoQuery = 'SELECT DISTINCT nivel_tono FROM usuarios WHERE nivel_tono IS NOT NULL';
-    
-    // Usamos Promesas para manejar las dos consultas de forma paralela (más eficiente)
     const getTiposPiel = new Promise((resolve, reject) => {
         pool.query(tipoPielQuery, (error, results) => {
             if (error) reject(error);
-            // Mapeamos los resultados a un array simple de strings
             resolve(results.rows.map(row => row.tipo_piel));
         });
     });
@@ -413,7 +324,6 @@ app.get('/api/productos/atributos', (req, res) => {
     const getNivelesTono = new Promise((resolve, reject) => {
         pool.query(nivelTonoQuery, (error, results) => {
             if (error) reject(error);
-            // Mapeamos los resultados a un array simple de strings
             resolve(results.map(row => row.nivel_tono));
         });
     });
@@ -431,17 +341,13 @@ app.get('/api/productos/atributos', (req, res) => {
         });
 });
 app.get('/api/productos/:id', async (req, res) => {
-    // 1. Obtener el ID del producto desde los parámetros de la URL
     const productId = req.params.id;
-    
-    // 2. Construir la URL del endpoint específico de la API externa
     const externalApiUrl = `http://makeup-api.herokuapp.com/api/v1/products/${productId}.json`;
     
     try {
         const response = await fetch(externalApiUrl);
         
         if (!response.ok) {
-            // Si la API externa no encuentra el producto o da otro error
             if (response.status === 404) {
                 return res.status(404).json({ error: 'Producto no encontrado.' });
             }
@@ -449,12 +355,7 @@ app.get('/api/productos/:id', async (req, res) => {
         }
         
         const productoDetalle = await response.json(); 
-        
-        // =======================================================
-        // ✨ PASO CLAVE: GENERAR LA RECOMENDACIÓN DE LOOK
-        // =======================================================
         productoDetalle.look_recomendado = await sugerirLooks(productoDetalle);
-        // 3. Responder con el detalle del producto (ahora con description_es)
         res.status(200).json(productoDetalle); 
 
     } catch (error) {

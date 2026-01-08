@@ -22,22 +22,18 @@ document.addEventListener('DOMContentLoaded', () => {
  */
 function actualizarResultado(type, content) {
     const resultadoDiv = document.getElementById('resultadoPerfil');
-    
-    // 1. Limpiar clases anteriores
     resultadoDiv.classList.remove('hidden', 'border-green-400', 'bg-green-50', 'text-green-700', 
                                   'border-red-400', 'bg-red-50', 'text-red-700', 
                                   'border-amber-400', 'bg-amber-50', 'text-amber-700');
     
-    // 2. Aplicar clases de Tailwind según el tipo de mensaje
     if (type === 'success') {
         resultadoDiv.classList.add('border-green-400', 'bg-green-50', 'text-green-700');
     } else if (type === 'error') {
         resultadoDiv.classList.add('border-red-400', 'bg-red-50', 'text-red-700');
-    } else if (type === 'warning') { // Para errores de conexión
+    } else if (type === 'warning') { 
         resultadoDiv.classList.add('border-amber-400', 'bg-amber-50', 'text-amber-700');
     }
 
-    // 3. Insertar contenido y mostrar
     resultadoDiv.innerHTML = content;
     resultadoDiv.classList.remove('hidden');
 }
@@ -48,22 +44,17 @@ async function manejarEnvioRegistro(event) {
 
     const form = document.getElementById('encuestaPielForm');
     const resultadoDiv = document.getElementById('resultadoPerfil');
-    resultadoDiv.classList.add('hidden'); // Ocultar resultados anteriores
+    resultadoDiv.classList.add('hidden'); 
 
-    // 1. Capturar los valores del formulario
     const nombre = document.getElementById('nombre').value;
     const correo = document.getElementById('correo').value;
     const password = document.getElementById('password').value; 
     const tipoPiel = document.getElementById('tipoPiel').value;
     const subtonoPiel = document.getElementById('subtonoPiel').value;
     const nivelTono = document.getElementById('nivelTono').value;
-
-    // 2. Crear el objeto de datos
     const datosRegistro = { nombre, correo, password, tipoPiel, subtonoPiel, nivelTono };
 
     try {
-        // 3. Enviar los datos al servidor Express
-        // CÁMBIALO A ESTO:
 const response = await fetch('https://makeup-dpl7.onrender.com/api/registro', {
     method: 'POST',
     headers: {
@@ -73,40 +64,26 @@ const response = await fetch('https://makeup-dpl7.onrender.com/api/registro', {
 });
 
         const data = await response.json(); 
-
-        // 4. Manejar la respuesta del servidor
         if (response.ok) {
-            // 1. Definir el contenido visual de éxito
             const successContent = `
                 <p class="font-bold">✅ ¡Registro exitoso!</p>
                 <p>Bienvenido/a: <span class="font-semibold">${datosRegistro.nombre}</span></p>
                 <p>Perfil Guardado: ${datosRegistro.tipoPiel}, ${datosRegistro.subtonoPiel}, ${datosRegistro.nivelTono}</p>
                 <p class="mt-2">🎉 Redireccionando a las recomendaciones en 3 segundos...</p>
             `;
-
-            // 2. CREAR EL PERFIL PARA EL FILTRO INTELIGENTE
-            // Usamos el formato exacto que espera recomendaciones.js (línea 136 y 145)
             const perfilParaFiltro = {
                 tipoPiel: datosRegistro.tipoPiel,
                 nivelTono: datosRegistro.nivelTono,
                 subtonoPiel: datosRegistro.subtonoPiel
             };
-
-            // 3. GUARDAR EN LA MEMORIA CORRECTA (sessionStorage)
-            // Guardamos con la clave 'userProfile' para que el filtro lo reconozca al cargar
             sessionStorage.setItem('userProfile', JSON.stringify(perfilParaFiltro));
-
-            // 4. (Opcional) Guardar datos adicionales en localStorage
             localStorage.setItem('nombreUsuario', datosRegistro.nombre);
-
-            // 5. Actualizar la interfaz y redirigir
             actualizarResultado('success', successContent);
             
             setTimeout(() => {
                 window.location.href = "recomendaciones.html"; 
             }, 3000);
         }else {
-            // Error de la API (ej: correo duplicado, datos faltantes)
             const errorContent = `
                 <p class="font-bold">❌ Error al registrar:</p>
                 <p>${data.error || 'Ocurrió un error desconocido en el servidor.'}</p>
@@ -116,7 +93,6 @@ const response = await fetch('https://makeup-dpl7.onrender.com/api/registro', {
         }
 
     } catch (error) {
-        // Error de red (el servidor no responde o no está corriendo)
         const warningContent = `
             <p class="font-bold">⚠️ Error de Conexión:</p>
             <p>Asegúrate de que el servidor Express esté corriendo en <code>http://localhost:3000</code>.</p>
