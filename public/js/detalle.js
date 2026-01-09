@@ -101,13 +101,18 @@ async function enviarResena() {
     const nombreUsuario = localStorage.getItem('nombreUsuario') || 'Usuario Invitado';
     const msg = document.getElementById('msgResena');
     const btn = document.querySelector("button[onclick='enviarResena()']");
-    btn.innerText = "Enviando...";
-    btn.disabled = true;
+
+    // 1. Validar que haya comentario
     if (!comentario.trim()) {
         msg.className = "text-center text-sm mt-2 text-red-500 font-semibold";
         msg.textContent = "⚠️ Por favor, escribe un comentario.";
-        return;
+        return; // Aquí salimos si está vacío
     }
+
+    // 2. Estado visual de carga
+    btn.innerText = "Enviando...";
+    btn.disabled = true;
+    msg.textContent = ""; 
 
     const datosResena = {
         producto_id: productoId,
@@ -127,12 +132,19 @@ async function enviarResena() {
             msg.className = "text-center text-sm mt-2 text-green-600 font-bold";
             msg.textContent = "✅ ¡Reseña publicada con éxito!";
             document.getElementById('comentario').value = ""; // Limpiar el campo
-            cargarResenas(); // Recargar la lista de reseñas
-            btn.innerText = "Publicar Reseña";
-    btn.disabled = false;
+            cargarResenas(); // Recargar la lista
+        } else {
+            msg.className = "text-center text-sm mt-2 text-red-500 font-semibold";
+            msg.textContent = "❌ Error al publicar la reseña.";
         }
     } catch (error) {
         console.error("Error al enviar reseña:", error);
+        msg.textContent = "❌ Error de conexión con el servidor.";
+    } finally {
+        // 3. REGRESAR EL BOTÓN A SU ESTADO NORMAL (Pase lo que pase)
+        btn.innerText = "Publicar Reseña";
+        btn.disabled = false;
+        btn.classList.add("bg-rose-500", "text-white"); 
     }
 }
 
