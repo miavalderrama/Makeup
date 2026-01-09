@@ -100,7 +100,9 @@ async function enviarResena() {
     const comentario = document.getElementById('comentario').value;
     const nombreUsuario = localStorage.getItem('nombreUsuario') || 'Usuario Invitado';
     const msg = document.getElementById('msgResena');
-
+    const btn = document.querySelector("button[onclick='enviarResena()']");
+    btn.innerText = "Enviando...";
+    btn.disabled = true;
     if (!comentario.trim()) {
         msg.className = "text-center text-sm mt-2 text-red-500 font-semibold";
         msg.textContent = "⚠️ Por favor, escribe un comentario.";
@@ -126,6 +128,8 @@ async function enviarResena() {
             msg.textContent = "✅ ¡Reseña publicada con éxito!";
             document.getElementById('comentario').value = ""; // Limpiar el campo
             cargarResenas(); // Recargar la lista de reseñas
+            btn.innerText = "Publicar Reseña";
+    btn.disabled = false;
         }
     } catch (error) {
         console.error("Error al enviar reseña:", error);
