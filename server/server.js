@@ -364,6 +364,32 @@ app.get('/api/productos/:id', async (req, res) => {
     }
 });
 
+app.post('/api/resenas', async (req, res) => {
+    const { producto_id, usuario_nombre, calificacion, comentario } = req.body;
+    try {
+        const query = 'INSERT INTO resenas (producto_id, usuario_nombre, calificacion, comentario) VALUES ($1, $2, $3, $4) RETURNING *';
+        const values = [producto_id, usuario_nombre, calificacion, comentario];
+        const result = await pool.query(query, values);
+        res.status(201).json(result.rows[0]);
+    } catch (err) {
+        console.error("Error al guardar reseña:", err);
+        res.status(500).json({ error: 'Error al guardar la reseña' });
+    }
+});
+
+app.get('/api/resenas/:id', async (req, res) => {
+    try {
+        const result = await pool.query(
+            'SELECT * FROM resenas WHERE producto_id = $1 ORDER BY fecha_creacion DESC', 
+            [req.params.id]
+        );
+        res.json(result.rows);
+    } catch (err) {
+        console.error("Error al obtener reseñas:", err);
+        res.status(500).json({ error: 'Error al obtener reseñas' });
+    }
+});
+
 // ----------------------------------------------------
 // INICIO DEL SERVIDOR
 // ----------------------------------------------------
