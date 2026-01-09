@@ -95,7 +95,7 @@ async function activarFiltroInteligenteAutomatico() {
     const tipoPiel = perfil.tipoPiel;
     const nivelTono = perfil.nivelTono;
     const productosFiltradosDiv = document.getElementById('productosFiltrados');
-    productosFiltradosDiv.innerHTML = `<h3 class="text-2xl font-bold text-rose-600 mb-3">Resultados de Filtro Inteligente</h3><p class="text-gray-600">🔎 Analizando Perfil ${tipoPiel} y Tono ${nivelTono}...</p>`;
+    productosFiltradosDiv.innerHTML = `<h3 class="text-2xl font-bold text-rose-600 mb-3">Resultados de Filtro Inteligente</h3><p class="text-gray-600">🔎 Analizando piel tipo ${tipoPiel} y Tono ${nivelTono}...</p>`;
     
     try {
         const url = `${API_BASE}/productos/filtrado?tipoPiel=${tipoPiel}&nivelTono=${nivelTono}`;
