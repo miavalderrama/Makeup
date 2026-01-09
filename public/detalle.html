@@ -3,16 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detalle del Producto | VeraBeauty Intelligence</title>
+    <title>Detalle | VeraBeauty</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Poppins', sans-serif; }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
+        .glass-card { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); }
     </style>
 </head>
 <body class="bg-gradient-to-br from-rose-50 to-gray-100 min-h-screen">
@@ -35,39 +31,38 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             
             <div class="bg-white p-8 rounded-3xl shadow-lg border border-rose-100">
-    <h3 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-        <span class="mr-2">✨</span> Deja tu opinión
-    </h3>
-    
-    <div class="space-y-4">
-        <div>
-            <label class="block text-sm font-medium text-gray-600 mb-1">Tu calificación</label>
-            <select id="rating" class="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-rose-400 outline-none transition">
-                <option value="5">⭐⭐⭐⭐⭐ (Excelente)</option>
-                <option value="4">⭐⭐⭐⭐ (Muy bueno)</option>
-                <option value="3">⭐⭐⭐ (Bueno)</option>
-                <option value="2">⭐⭐ (Regular)</option>
-                <option value="1">⭐ (Malo)</option>
-            </select>
-        </div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                    <span class="mr-2">✨</span> Deja tu opinión
+                </h3>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 mb-1">Tu calificación</label>
+                        <select id="rating" class="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-rose-400 outline-none transition">
+                            <option value="5">⭐⭐⭐⭐⭐ (Excelente)</option>
+                            <option value="4">⭐⭐⭐⭐ (Muy bueno)</option>
+                            <option value="3">⭐⭐⭐ (Bueno)</option>
+                            <option value="2">⭐⭐ (Regular)</option>
+                            <option value="1">⭐ (Malo)</option>
+                        </select>
+                    </div>
 
-        <div>
-            <label class="block text-sm font-medium text-gray-600 mb-1">Tu comentario</label>
-            <textarea id="comentario" rows="4" class="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-rose-400 outline-none transition" placeholder="Cuéntanos qué te pareció este producto..."></textarea>
-        </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 mb-1">Tu comentario</label>
+                        <textarea id="comentario" rows="4" class="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-rose-400 outline-none transition" placeholder="Cuéntanos qué te pareció..."></textarea>
+                    </div>
 
-        <button onclick="enviarResena()" class="w-full bg-rose-500 hover:bg-rose-600 text-white font-bold py-3 px-6 rounded-xl shadow-lg transform transition active:scale-95">
-            Publicar Reseña
-        </button>
-
-        <p id="msgResena" class="text-center text-sm mt-2 font-medium"></p>
-    </div>
-</div>
+                    <button onclick="enviarResena()" class="w-full bg-rose-500 hover:bg-rose-600 text-white font-bold py-3 px-6 rounded-xl shadow-lg transform transition active:scale-95">
+                        Publicar Reseña
+                    </button>
+                    <p id="msgResena" class="text-center text-sm mt-2"></p>
+                </div>
+            </div>
 
             <div class="bg-white p-8 rounded-3xl shadow-lg border border-gray-100">
                 <h3 class="text-2xl font-bold text-gray-800 mb-6">Reseñas de la comunidad</h3>
                 <div id="listaResenas" class="space-y-4 max-h-96 overflow-y-auto pr-2">
-                    <p class="text-gray-400 italic">Aún no hay reseñas. ¡Sé el primero!</p>
+                    <p class="text-gray-400 italic">Cargando reseñas...</p>
                 </div>
             </div>
 
