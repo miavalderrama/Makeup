@@ -1,0 +1,11 @@
+#glamourFeed {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2.5rem;
+    padding: 2rem 0;
+}
+
+/* Efecto de suavizado para las imágenes */
+img {
+    mix-blend-mode: multiply; /* Esto ayuda a que el fondo blanco de las fotos de la API se mezcle con el gris suave de la tarjeta */
+}

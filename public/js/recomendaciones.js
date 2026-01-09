@@ -137,7 +137,6 @@ async function activarFiltroInteligenteAutomatico() {
  * @param {'horizontal' | 'grid'} layout - Estilo de layout (carrusel o cuadrícula).
  */
 function renderProducto(p, safeMarca = null, layout = 'grid') {
-    
     let imageUrl = p.image_link; 
     if (!imageUrl) {
         if (safeMarca && typeof marcaStatus !== 'undefined' && marcaStatus[safeMarca]) {
@@ -145,48 +144,65 @@ function renderProducto(p, safeMarca = null, layout = 'grid') {
         }
         return ''; 
     }
+
     const onerrorAction = safeMarca 
         ? `this.closest('.producto').style.display='none'; ajustarContadorFallido('${safeMarca}');`
         : `this.closest('.producto').style.display='none';`; 
+
     const layoutClasses = layout === 'horizontal' 
-        ? 'w-64 flex-shrink-0' 
+        ? 'w-72 flex-shrink-0' 
         : 'w-full'; 
+
     const productTypeChip = p.product_type 
-        ? `<span class="inline-block bg-rose-100 text-rose-600 text-xs font-semibold px-2 py-0.5 rounded-full uppercase tracking-wider">${p.product_type.replace(/_/g, ' ')}</span>`
+        ? `<span class="bg-rose-50 text-rose-600 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest mb-3 inline-block border border-rose-100">${p.product_type.replace(/_/g, ' ')}</span>`
         : '';
+
     const clickAction = `verDetalleProducto('${p.id}')`; 
+
     return `
-        <div class="producto bg-white border border-gray-100 p-4 rounded-xl shadow-md 
-                     hover:shadow-xl transition-all duration-300 transform hover:scale-[1.05] 
-                     flex flex-col text-left overflow-hidden cursor-pointer group ${layoutClasses}" 
-                     
-                     onclick="${clickAction}"> 
-                     
-            <div class="w-full h-40 object-contain mb-3 rounded-lg bg-gray-100 p-2 overflow-hidden flex items-center justify-center">
-                <img src="${imageUrl}" alt="${p.name || 'Producto sin nombre'}" 
-                    class="max-w-full max-h-full object-contain transition-transform duration-300 group-hover:scale-110"
-                    onerror="${onerrorAction}">
+        <div class="producto group bg-white rounded-3xl p-5 shadow-sm hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 flex flex-col border border-gray-50 cursor-pointer overflow-hidden ${layoutClasses}" 
+             onclick="${clickAction}"> 
+            
+            <div class="relative w-full h-52 mb-5 rounded-2xl bg-gray-50 flex items-center justify-center overflow-hidden transition-colors group-hover:bg-rose-50">
+                <img src="${imageUrl}" alt="${p.name || 'Producto'}" 
+                    class="max-w-[80%] max-h-[80%] object-contain transition-transform duration-700 group-hover:scale-110"
+                    onerror="${onerrorAction}"
+                    style="mix-blend-mode: multiply;">
+                
+                <div class="absolute inset-0 bg-rose-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
+                    <span class="bg-white text-rose-600 text-xs font-bold py-2 px-4 rounded-full shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                        Descubrir más
+                    </span>
+                </div>
             </div>
             
-            <div class="flex flex-col w-full">
-                
-                <strong class="text-lg font-bold text-gray-800 leading-tight line-clamp-2 mb-1">
-                    ${p.name || 'Nombre no disponible'}
-                </strong>
-                
-                ${productTypeChip}
+            <div class="flex flex-col flex-grow">
+                <p class="text-[11px] text-gray-400 font-bold uppercase tracking-widest mb-1 group-hover:text-rose-400 transition-colors">
+                    ${p.brand || 'Original Luxury'}
+                </p>
 
-                <span class="text-xs text-gray-500 mt-2">
-                    Marca: <span class="font-bold text-gray-700">${p.brand || 'Desconocida'}</span>
-                </span>
+                <h3 class="text-gray-800 font-bold text-lg leading-tight h-14 line-clamp-2 mb-3 group-hover:text-gray-900 transition-colors">
+                    ${p.name || 'Nombre no disponible'}
+                </h3>
                 
-                <p class="text-2xl font-extrabold text-rose-500 mt-2">
-                    ${p.price ? `${p.price_sign || '$'}${p.price}` : 'Precio N/A'}
-                </p>
+                <div class="mb-4">
+                    ${productTypeChip}
+                </div>
                 
-                <p class="text-xs text-gray-400 mt-2 italic line-clamp-2">
-                    ${p.description ? p.description.substring(0, 70).replace(/\s+/g, ' ') + '...' : 'Sin descripción detallada.'}
-                </p>
+                <div class="mt-auto flex items-center justify-between border-t border-gray-50 pt-4">
+                    <div class="flex flex-col">
+                        <span class="text-[10px] text-gray-400 font-medium">Precio Estimado</span>
+                        <span class="text-2xl font-black text-gray-900">
+                            ${p.price ? `${p.price_sign || '$'}${p.price}` : 'Consultar'}
+                        </span>
+                    </div>
+                    
+                    <div class="bg-gray-900 text-white p-3 rounded-2xl group-hover:bg-rose-500 transition-all duration-300 shadow-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
+                    </div>
+                </div>
             </div>
         </div>
     `;
