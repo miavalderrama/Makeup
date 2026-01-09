@@ -182,4 +182,51 @@ async function cargarResenas() {
 document.addEventListener('DOMContentLoaded', () => {
     cargarDetalle();
     cargarResenas();
+
+    // --- AQUÍ PEGAS LA LÓGICA DE LAS ESTRELLAS ---
+    const estrellas = document.querySelectorAll('#star-rating .star');
+    const ratingInput = document.getElementById('rating');
+
+    estrellas.forEach(estrella => {
+        estrella.addEventListener('click', () => {
+            const valor = estrella.getAttribute('data-value');
+            ratingInput.value = valor;
+            
+            // Pintar las estrellas
+            estrellas.forEach(s => {
+                if (s.getAttribute('data-value') <= valor) {
+                    s.classList.replace('text-gray-300', 'text-yellow-500');
+                } else {
+                    s.classList.replace('text-yellow-500', 'text-gray-300');
+                }
+            });
+        });
+
+        // Efecto visual al pasar el mouse
+        estrella.addEventListener('mouseover', () => {
+            const valor = estrella.getAttribute('data-value');
+            estrellas.forEach(s => {
+                s.style.color = s.getAttribute('data-value') <= valor ? '#FBBF24' : '#D1D5DB';
+            });
+        });
+    });
+
+    // Resetear color cuando el mouse sale (vuelve al valor seleccionado)
+    document.getElementById('star-rating').addEventListener('mouseleave', () => {
+        const valorActual = ratingInput.value;
+        estrellas.forEach(s => {
+            s.style.color = ''; // Limpia el estilo inline para usar las clases de Tailwind
+            if (s.getAttribute('data-value') <= valorActual) {
+                s.classList.add('text-yellow-500');
+                s.classList.remove('text-gray-300');
+            } else {
+                s.classList.add('text-gray-300');
+                s.classList.remove('text-yellow-500');
+            }
+        });
+    });
+});
+document.addEventListener('DOMContentLoaded', () => {
+    cargarDetalle();
+    cargarResenas();
 });

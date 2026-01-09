@@ -37,15 +37,18 @@
                 
                 <div class="space-y-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-600 mb-1">Tu calificación</label>
-                        <select id="rating" class="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-rose-400 outline-none transition">
-                            <option value="5">⭐⭐⭐⭐⭐ (Excelente)</option>
-                            <option value="4">⭐⭐⭐⭐ (Muy bueno)</option>
-                            <option value="3">⭐⭐⭐ (Bueno)</option>
-                            <option value="2">⭐⭐ (Regular)</option>
-                            <option value="1">⭐ (Malo)</option>
-                        </select>
-                    </div>
+    <label class="block text-sm font-medium text-gray-600 mb-2">Tu calificación</label>
+    
+    <div id="star-rating" class="flex space-x-2 text-3xl cursor-pointer mb-2">
+        <span class="star text-gray-300 transition-colors" data-value="1">★</span>
+        <span class="star text-gray-300 transition-colors" data-value="2">★</span>
+        <span class="star text-gray-300 transition-colors" data-value="3">★</span>
+        <span class="star text-gray-300 transition-colors" data-value="4">★</span>
+        <span class="star text-gray-300 transition-colors" data-value="5">★</span>
+    </div>
+
+    <input type="hidden" id="rating" value="5">
+</div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-600 mb-1">Tu comentario</label>
